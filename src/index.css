@@ -51,6 +51,10 @@ html {
     width: calc(50% - 30px);
     margin-left: 30px;
   }
+  .smallImages {
+    width: 80px;
+    margin: 16px;
+  }
 }
 
 @media all and (max-width: 914px) {
@@ -67,5 +71,9 @@ html {
   #content-right {
     order: 2;
     width: 100%;
+  }
+  .smallImages {
+    width: 40px;
+    margin: 8px;
   }
 }

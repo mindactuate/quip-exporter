@@ -42,7 +42,7 @@ class App extends React.Component {
                     <img
                       src={logo}
                       alt="logo"
-                      style={{ width: "80px", margin: "1em" }}
+                      className="smallImages"
                     />
                   </td>
                   <td valign="top">
@@ -92,7 +92,7 @@ class App extends React.Component {
                     <img
                       src={avatar}
                       alt="avatar"
-                      style={{ width: "80px", margin: "1em" }}
+                      className="smallImages"
                     />
                   </td>
                   <td valign="top">
@@ -139,7 +139,7 @@ class App extends React.Component {
                       <img
                         src={donateIcon}
                         alt="donateIcon"
-                        style={{ width: "80px", margin: "1em" }}
+                        className="smallImages"
                       />
                     </a>
                   </td>
