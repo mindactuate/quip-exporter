@@ -26,7 +26,7 @@ let waiter = new patiently.LimitWaiter({
 let d = new Date();
 let rootDir = clean(d.toLocaleString());
 var path = [rootDir];
-let numAPICallsToPause = 100;
+let numAPICallsToPause = 50;
 
 export let startExporting = function (quipToken) {
   if (quipToken) {

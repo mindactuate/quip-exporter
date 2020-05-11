@@ -179,11 +179,11 @@ class App extends React.Component {
                 developer tools from your browser.
               </s>{" "}
               <b style={{ color: "red" }}>Important note:</b> I am currently in
-              contact with Quip to get a CORS approval for my github page. I
-              have implemented a cloudflare cors-proxy as man-in-the-middle. You
-              can also see the used code file in my repository. Unfortunately I
-              only have 100.000 free calls per day on Cloudflare. I hope to find
-              a solution with Quip soon.
+              contact with Quip to get a CORS trust for my github page.
+              Temporarily I have implemented a Cloudflare cors-proxy as
+              man-in-the-middle. You can find the code for the cors-proxy in my
+              repository. Unfortunately I only have 100.000 free calls per day
+              on Cloudflare. I hope to find a solution with Quip soon.
             </p>
             <div id="tokenform">
               <label>Quip Access token</label>
@@ -196,15 +196,6 @@ class App extends React.Component {
                 autoComplete="off"
               />
             </div>
-            {/* <h2>CORS</h2>
-            Due to reasons that <em>your</em> access token should stay{" "}
-            <em>your's</em> all the API calls to Quip are made by your browser
-            and not by a backend service. Because of the browser "acts" on
-            behalf of mindactuate.github.io the browser blocks the requests in
-            order to CORS policy.
-            <br />
-            <br />
-            <b style={{ color: "red" }}>Please enable CORS</b> */}
             <h2>Start exporting</h2>
             <p>
               After hitting the button the exporter starts to export. Please
