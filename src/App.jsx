@@ -117,6 +117,13 @@ class App extends React.Component {
                 </tr>
               </tbody>
             </table>
+            <h2>Impressum and privacy</h2>
+            <p>
+              You can find the impressum and gdpr privacy in German under{" "}
+              <a href="https://mindactuate.github.io/impressum-datenschutz/">
+                mindactuate.github.io/impressum-datenschutz/
+              </a>
+            </p>
           </div>
           <div id="content-right">
             <h2>Donating</h2>
