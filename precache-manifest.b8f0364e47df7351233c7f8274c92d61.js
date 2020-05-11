@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b8420632b6d1d6576be6829d063d11b0",
+    "revision": "a11d8b9cd315c041cd091a631110735a",
     "url": "/quip-exporter/index.html"
   },
   {
-    "revision": "e998ae34a9a49847d01e",
+    "revision": "4e80b51beb578eab37ab",
     "url": "/quip-exporter/static/css/main.a0402ac4.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/quip-exporter/static/js/2.38a0ae0a.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "e998ae34a9a49847d01e",
-    "url": "/quip-exporter/static/js/main.2d60bb29.chunk.js"
+    "revision": "4e80b51beb578eab37ab",
+    "url": "/quip-exporter/static/js/main.669bdb35.chunk.js"
   },
   {
     "revision": "ead64afd07fdb40e765f",
