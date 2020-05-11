@@ -14,10 +14,6 @@ class App extends React.Component {
   startExporting() {
     let at = document.getElementById("accesstoken").value;
     exporter.startExporting(at);
-    // if (!at || at.length === 0) {
-    //   alert("Please provide a valid access token");
-    // } else {
-    // }
   }
 
   donateAndContinue() {
@@ -120,7 +116,10 @@ class App extends React.Component {
             <h2>Impressum and privacy</h2>
             <p>
               You can find the impressum and gdpr privacy in German under{" "}
-              <a href="https://mindactuate.github.io/impressum-datenschutz/" target="blank">
+              <a
+                href="https://mindactuate.github.io/impressum-datenschutz/"
+                target="blank"
+              >
                 mindactuate.github.io/impressum-datenschutz/
               </a>
             </p>
@@ -167,16 +166,24 @@ class App extends React.Component {
               and paste it into the form input.
               <br />
               <br />
-              You can be sure that your token is used only locally in your web
-              browser and is not transmitted anywhere else but{" "}
-              <a
-                href="https://quip.com/dev/automation/documentation"
-                target="blank"
-              >
-                platform.quip.com
-              </a>
-              . Therefore you can check the network traffic with help of the
-              developer tools from your browser.
+              <s>
+                You can be sure that your token is used only locally in your web
+                browser and is not transmitted anywhere else but{" "}
+                <a
+                  href="https://quip.com/dev/automation/documentation"
+                  target="blank"
+                >
+                  platform.quip.com
+                </a>{" "}
+                Therefore you can check the network traffic with help of the
+                developer tools from your browser.
+              </s>{" "}
+              <b style={{ color: "red" }}>Important note:</b> I am currently in
+              contact with Quip to get a CORS approval for my github page. I
+              have implemented a cloudflare cors-proxy as man-in-the-middle. You
+              can also see the used code file in my repository. Unfortunately I
+              only have 100.000 free calls per day on Cloudflare. I hope to find
+              a solution with Quip soon.
             </p>
             <div id="tokenform">
               <label>Quip Access token</label>
