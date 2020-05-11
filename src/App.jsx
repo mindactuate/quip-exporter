@@ -39,11 +39,7 @@ class App extends React.Component {
               <tbody>
                 <tr>
                   <td valign="top">
-                    <img
-                      src={logo}
-                      alt="logo"
-                      className="smallImages"
-                    />
+                    <img src={logo} alt="logo" className="smallImages" />
                   </td>
                   <td valign="top">
                     <p>
@@ -89,11 +85,7 @@ class App extends React.Component {
               <tbody>
                 <tr>
                   <td valign="top">
-                    <img
-                      src={avatar}
-                      alt="avatar"
-                      className="smallImages"
-                    />
+                    <img src={avatar} alt="avatar" className="smallImages" />
                   </td>
                   <td valign="top">
                     <p>
@@ -186,10 +178,19 @@ class App extends React.Component {
                 type="text"
                 id="accesstoken"
                 name="accesstoken"
-                style={{ width: "100%", height: "30px", margin: "5px 5px 0" }}
+                style={{ width: "100%", height: "30px" }}
                 autoComplete="off"
               />
             </div>
+            {/* <h2>CORS</h2>
+            Due to reasons that <em>your</em> access token should stay{" "}
+            <em>your's</em> all the API calls to Quip are made by your browser
+            and not by a backend service. Because of the browser "acts" on
+            behalf of mindactuate.github.io the browser blocks the requests in
+            order to CORS policy.
+            <br />
+            <br />
+            <b style={{ color: "red" }}>Please enable CORS</b> */}
             <h2>Start exporting</h2>
             <p>
               After hitting the button the exporter starts to export. Please
@@ -221,10 +222,9 @@ class App extends React.Component {
             <div hidden={!globalStore.exportPaused}>
               <p>
                 You exported <b>{globalStore.numAPIcalls}</b> documents and
-                images now.{" "}
-                <b>Please donate just a little to continue with the export.</b>{" "}
-                You can also download the current zip and have a look at the
-                files.
+                images now. A friendly reminder:
+                <b>Please donate just a little.</b> You can also download the
+                current zip and have a look at the files.
               </p>
               <input
                 type="button"
@@ -248,7 +248,7 @@ class App extends React.Component {
                 style={{
                   width: "100%",
                   height: "50px",
-                  backgroundColor: "gold"
+                  backgroundColor: "gold",
                 }}
                 onClick={() => this.downloadZip()}
               />
@@ -257,7 +257,7 @@ class App extends React.Component {
         </div>
         <h2>Log</h2>
         <div id="logarea">
-          {globalStore.log.map(val => (
+          {globalStore.log.map((val) => (
             <pre>{val}</pre>
           ))}
         </div>

@@ -14,31 +14,31 @@ let mdService = new turndown();
 let zipService = new jszip();
 
 let waiter = new patiently.LimitWaiter({
-  startWaitingCallback: res => console.log(res),
-  endWaitingCallback: res => console.log(res),
-  waitingTickCallback: res => console.log(res),
+  startWaitingCallback: (res) => console.log(res),
+  endWaitingCallback: (res) => console.log(res),
+  waitingTickCallback: (res) => console.log(res),
   minutelyLimit: 50,
   hourlyLimit: 750,
   msBetweenTwoCalls: 0,
-  test: false
+  test: false,
 });
 
 let d = new Date();
 let rootDir = clean(d.toLocaleString());
 var path = [rootDir];
-let numAPICallsToPause = 20;
+let numAPICallsToPause = 100;
 
-export let startExporting = function(quipToken) {
+export let startExporting = function (quipToken) {
   if (quipToken) {
     globalStore.running = true;
     globalStore.quipToken = quipToken; // "cache" quip token
     globalStore.addToLog(`Got access token: ${quipToken}`);
     globalStore.addToLog(`Start exporting`);
-    getUser(user => {
+    getUser((user) => {
       let sharedFolderIds = user["shared_folder_ids"];
       let sharedFolderChildren = [];
       if (Array.isArray(sharedFolderIds)) {
-        sharedFolderIds.forEach(folderId => {
+        sharedFolderIds.forEach((folderId) => {
           sharedFolderChildren.push({ folder_id: folderId });
         });
       }
@@ -46,21 +46,21 @@ export let startExporting = function(quipToken) {
         children: sharedFolderChildren,
         folder: {
           id: "12345",
-          title: "Shared"
-        }
+          title: "Shared",
+        },
       };
-      getFolder(user["private_folder_id"], privateFolder => {
+      getFolder(user["private_folder_id"], (privateFolder) => {
         console.log("loop over private folder docs");
-        waterfallOverFolder(privateFolder, processObj, function(tree) {
+        waterfallOverFolder(privateFolder, processObj, function (tree) {
           console.log("In queue:", waiter.callbackQueue.length);
           console.log("loop over shared folders");
-          waterfallOverFolder(sharedFolder, processObj, function(tree) {
+          waterfallOverFolder(sharedFolder, processObj, function (tree) {
             globalStore.addToLog("Finished exporting");
             globalStore.addToLog("Used " + waiter.totalC + " api calls");
             globalStore.addToLog("Creating zip file");
 
             setTimeout(() => {
-              zipService.generateAsync({ type: "blob" }).then(function(blob) {
+              zipService.generateAsync({ type: "blob" }).then(function (blob) {
                 globalStore.addToLog(`Zip file ${rootDir} created`);
                 globalStore.zipFile = blob;
                 globalStore.rootDir = rootDir;
@@ -79,16 +79,16 @@ export let startExporting = function(quipToken) {
   }
 };
 
-let getUser = async callback => {
+let getUser = async (callback) => {
   waiter.wait(() => {
     let url = `${config.default.quipHost}users/current`;
     axios.default
       .get(url, {
         headers: {
-          Authorization: "Bearer " + globalStore.quipToken
-        }
+          Authorization: "Bearer " + globalStore.quipToken,
+        },
       })
-      .then(res => {
+      .then((res) => {
         if (res && res.data) {
           let user = res.data;
           console.log(user);
@@ -100,7 +100,7 @@ let getUser = async callback => {
           globalStore.addToLog(`No user object received`);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         globalStore.running = false;
         globalStore.addToLog(
           `Error while getting user: ${JSON.stringify(err.message)}`
@@ -122,10 +122,10 @@ let getFolder = async (id, callback) => {
     axios.default
       .get(url, {
         headers: {
-          Authorization: "Bearer " + globalStore.quipToken
-        }
+          Authorization: "Bearer " + globalStore.quipToken,
+        },
       })
-      .then(res => {
+      .then((res) => {
         if (res && res.data) {
           let folder = res.data;
           console.log(folder);
@@ -137,7 +137,7 @@ let getFolder = async (id, callback) => {
           globalStore.addToLog(`No folder object received`);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         globalStore.running = false;
         globalStore.addToLog(
           `Error while getting folder: ${JSON.stringify(err.message)}`
@@ -187,14 +187,14 @@ function waterfallOverFolder(folder, iterator, callback) {
 function clean(str) {
   let tr = { ä: "ae", ü: "ue", ö: "oe", ß: "ss", Ä: "Ae", Ü: "Ue", Ö: "Oe" };
   let clean = str.replace(/[^A-Za-z0-9äöüÄÖÜß]/gi, "");
-  clean = clean.replace(/[äöüÄÖÜß]/g, function($0) {
+  clean = clean.replace(/[äöüÄÖÜß]/g, function ($0) {
     return tr[$0];
   });
   return clean;
 }
 
 function waitForUnpause() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     let interval = setInterval(() => {
       console.log("paused", globalStore.exportPaused);
       if (!globalStore.exportPaused) {
@@ -209,7 +209,7 @@ function waitForUnpause() {
 async function processObj(obj, report) {
   if (waiter.totalC > numAPICallsToPause && !globalStore.donated) {
     if (!globalStore.zipFile) {
-      zipService.generateAsync({ type: "blob" }).then(function(blob) {
+      zipService.generateAsync({ type: "blob" }).then(function (blob) {
         globalStore.addToLog(`Zip file ${rootDir}_demo created`);
         globalStore.zipFile = blob;
         globalStore.rootDir = rootDir + "_demo";
@@ -222,7 +222,7 @@ async function processObj(obj, report) {
     globalStore.running = true;
   }
   if (obj.hasOwnProperty("thread_id")) {
-    getThread(obj["thread_id"], thread => {
+    getThread(obj["thread_id"], (thread) => {
       let threadName = clean(thread.thread.title);
 
       path.push(threadName);
@@ -233,7 +233,7 @@ async function processObj(obj, report) {
         thread.html,
         thread.thread.id,
         threadName,
-        html => {
+        (html) => {
           createHTMLAndMdFile(threadFilePath, thread.thread.title, html);
           fetchDocxAndWriteToFile(obj["thread_id"], threadFilePath);
           report(obj["thread_id"]);
@@ -241,9 +241,9 @@ async function processObj(obj, report) {
       );
     });
   } else if (obj.hasOwnProperty("folder_id")) {
-    getFolder(obj["folder_id"], folder => {
+    getFolder(obj["folder_id"], (folder) => {
       // recursion
-      waterfallOverFolder(folder, processObj, function(tree) {
+      waterfallOverFolder(folder, processObj, function (tree) {
         report(tree);
       });
     });
@@ -258,10 +258,10 @@ let getThread = async (id, callback) => {
     axios.default
       .get(url, {
         headers: {
-          Authorization: "Bearer " + globalStore.quipToken
-        }
+          Authorization: "Bearer " + globalStore.quipToken,
+        },
       })
-      .then(res => {
+      .then((res) => {
         if (res && res.data && res.data.thread) {
           let thread = res.data;
           globalStore.addToLog(
@@ -276,7 +276,7 @@ let getThread = async (id, callback) => {
           );
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         globalStore.addToLog(
           `Error while getting thread: ${JSON.stringify(err.message)}`
@@ -318,13 +318,13 @@ function extractAndReplaceImgsInHTML(html, threadId, threadTitle, callback) {
     images.push({
       blobPath: blobPath,
       imageUrl: imageUrl,
-      imageFilePath: imageFilePath
+      imageFilePath: imageFilePath,
     });
 
     html = html.replace(m[1], imageUrl);
   }
 
-  fetchImageAndWriteToFile(images, function() {
+  fetchImageAndWriteToFile(images, function () {
     callback(html);
   });
 }
@@ -339,11 +339,11 @@ function fetchImageAndWriteToFile(images, callback) {
       axios.default
         .get(url, {
           headers: {
-            Authorization: "Bearer " + globalStore.quipToken
+            Authorization: "Bearer " + globalStore.quipToken,
           },
-          responseType: "arraybuffer"
+          responseType: "arraybuffer",
         })
-        .then(res => {
+        .then((res) => {
           let imgString = new Buffer.from(res.data, "binary");
           zipService.file(imageFilePath, imgString, { binary: true });
           globalStore.addToLog(`Image ${imageFilePath} written`);
@@ -351,7 +351,7 @@ function fetchImageAndWriteToFile(images, callback) {
           images.shift();
           fetchImageAndWriteToFile(images, callback);
         })
-        .catch(err => {
+        .catch((err) => {
           globalStore.addToLog(
             `Error while fetching image file ${imageFilePath}`
           );
@@ -372,16 +372,16 @@ function fetchDocxAndWriteToFile(threadId, path) {
       axios.default
         .get(url, {
           headers: {
-            Authorization: "Bearer " + globalStore.quipToken
+            Authorization: "Bearer " + globalStore.quipToken,
           },
-          responseType: "arraybuffer"
+          responseType: "arraybuffer",
         })
-        .then(res => {
+        .then((res) => {
           let fileString = new Buffer.from(res.data, "binary");
           zipService.file(path + ".docx", fileString, { binary: true });
           globalStore.addToLog(`Docx ${path} written`);
         })
-        .catch(err => {
+        .catch((err) => {
           globalStore.addToLog(`Error while fetching docx file ${path}`);
         });
     });
