@@ -1,68 +1,40 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img src="/public/Logo_Quip-Exporter.png" width="128">
 
-## Available Scripts
+## The Quip Exporter
 
-In the project directory, you can run:
+Quip is a great tool to create well formatted documents on desktop as well as on mobile devices. Unfortunately it lacks two important features:
 
-### `yarn start`
+1. To export all documents at once
+2. To export to html or md including image files
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This tool will perform a
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- **full export** of your Quip account's
+- **private & shared folders**.
 
-### `yarn test`
+The files will be exported as
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **HTML, md & docx** files
+- **including all of your images**.
 
-### `yarn build`
+Please keep in mind that it will not loop through your recycle bin and starred folder.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Get started
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+You can find the app at [mindactuate.github.io/quip-exporter](https://mindactuate.github.io/quip-exporter).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<img src="/public/Video_Quip-Exporter.gif">
 
-### `yarn eject`
+## About me and ref to Github
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+My name is Daniel, I am a software engineer from Germany. Find me at Github under [github.com/mindactuate](https://github.com/mindactuate) or at dev.to under [dev.to/mindactuate](https://dev.to/mindactuate).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Or you can send me an email to dnlgrnr911 at gmail.com.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Donating and a star
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+[<img src="/public/icon_donate.png" width=128>](https://www.paypal.me/mindactuate/1)
 
-## Learn More
+This app is a lot of work. Please consider donating just a little. :) You can [paypal me](https://www.paypal.me/mindactuate/1). That´s an effort of 5 seconds.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Further I would be very happy about a Github star from you. :)
