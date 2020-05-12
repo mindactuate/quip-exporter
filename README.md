@@ -38,3 +38,14 @@ Or you can send me an email to dnlgrnr911 at gmail.com.
 This app is a lot of work. Please consider donating just a little. :) You can [paypal me](https://www.paypal.me/mindactuate/1). That´s an effort of 5 seconds.
 
 Further I would be very happy about a Github star from you. :)
+
+## Tech Stack
+
+- [Quip](https://quip.com/) the "thing" it's all about
+- [ReactJS](https://reactjs.org/) and [create-react-app](https://www.npmjs.com/package/create-react-app)
+- [react-easy-state](https://github.com/RisingStack/react-easy-state), an amazing simple state management tool for ReactJS
+- [patiently](https://github.com/mindactuate/patiently), my own tool, which I have written especially for the Quip Exporter, but which is now used in many projects
+- [Cloudflare workers](https://workers.cloudflare.com/) for the CORS proxy (but I am in contact with Quip, perhaps I'll get a CORS trust)
+- [axios](https://github.com/axios/axios)
+- [file-saver](https://github.com/eligrey/FileSaver.js)
+- [turndown](https://github.com/domchristie/turndown)
