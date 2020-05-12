@@ -17,6 +17,10 @@ async function handleRequest(event) {
   const url = new URL(request.url)
   const apiurl = url.searchParams.get("apiurl");
 
+  if(apiurl && apiurl.length > 0){
+    return handleError("No param apiurl",400);
+  }
+
   // Rewrite request to point to API url. This also makes the request mutable
   // so we can add the correct Origin header to make the API server think
   // that this request isn't cross-site.
@@ -37,43 +41,50 @@ async function handleRequest(event) {
   response.headers.append("Vary", "Origin");
 
   // Debug
-  response.headers.set("X-Debug-1", JSON.stringify(event));
-  response.headers.set("X-Debug-2", JSON.stringify([...event.request.headers]));
+  // response.headers.set("X-Debug-1", JSON.stringify(event));
+  // response.headers.set("X-Debug-2", JSON.stringify([...event.request.headers]));
 
   return response;
 }
 
 function handleOptions(event) {
-  let request = event.request;
   // Make sure the necesssary headers are present
   // for this to be a valid pre-flight request
   return new Response(null, {
     headers: {
       ...corsHeaders,
-      "X-Debug-1": JSON.stringify(event),
-      "X-Debug-2": JSON.stringify([...event.request.headers]),
+      // "X-Debug-1": JSON.stringify(event),
+      // "X-Debug-2": JSON.stringify([...event.request.headers]),
     },
   });
 }
 
+function handleError(message, statusCode){
+  let code = 400;
+  if(statusCode && Number.isInteger(statusCode)){
+    code = Number.parseInt(statusCode);
+  }
+  return new Response(message, {status: code})
+}
+
 addEventListener("fetch", (event) => {
   const request = event.request;
-  if (request.method === "OPTIONS") {
-    // Handle CORS preflight requests
-    event.respondWith(handleOptions(event));
-  } else if (
-    request.method === "GET" ||
-    request.method === "HEAD" ||
-    request.method === "POST"
-  ) {
-    // Handle requests to the API server
-    event.respondWith(handleRequest(event));
+  const origin = request.headers.get('Origin')
+  if (origin && origin === corsHeaders["Access-Control-Allow-Origin"]) {
+    if (request.method === "OPTIONS") {
+      // Handle CORS preflight requests
+      event.respondWith(handleOptions(event));
+    } else if (
+      request.method === "GET" ||
+      request.method === "HEAD" ||
+      request.method === "POST"
+    ) {
+      // Handle requests to the API server
+      event.respondWith(handleRequest(event));
+    } else {
+      event.respondWith(handleError("Method Not Allowed",405));
+    }
   } else {
-    event.respondWith(async () => {
-      return new Response(null, {
-        status: 405,
-        statusText: "Method Not Allowed",
-      });
-    });
+    event.respondWith(handleError("Origin Not Allowed",403));
   }
 });
