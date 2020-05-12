@@ -17,7 +17,7 @@ async function handleRequest(event) {
   const url = new URL(request.url)
   const apiurl = url.searchParams.get("apiurl");
 
-  if(apiurl && apiurl.length > 0){
+  if(!apiurl || apiurl.length === 0){
     return handleError("No param apiurl",400);
   }
 
