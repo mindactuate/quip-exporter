@@ -85,7 +85,7 @@ class App extends React.Component {
                   </td>
                   <td valign="top">
                     <p>
-                      My name is Daniel, I am a software engineer from Germany.
+                      My name is Daniel Gruner, I am a software engineer from Germany.
                       Find me at Github under{" "}
                       <a href="https://github.com/mindactuate" target="blank">
                         github.com/mindactuate
