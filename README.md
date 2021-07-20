@@ -33,9 +33,9 @@ Or you can send me an email to dnlgrnr911 at gmail.com.
 
 ## Donating and a star
 
-[<img src="/public/icon_donate.png" width=128>](https://www.paypal.me/mindactuate/1)
+[<img src="/public/icon_donate.png" width=128>](https://www.paypal.me/mindactuate)
 
-This app is a lot of work. Please consider donating just a little. :) You can [paypal me](https://www.paypal.me/mindactuate/1). That´s an effort of 5 seconds.
+This app is a lot of work. Please consider donating just a little. :) You can [paypal me](https://www.paypal.me/mindactuate). That´s an effort of 5 seconds.
 
 Further I would be very happy about a Github star from you. :)
 
