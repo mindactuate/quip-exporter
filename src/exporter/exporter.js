@@ -26,7 +26,8 @@ let waiter = new patiently.LimitWaiter({
 let d = new Date();
 let rootDir = clean(d.toLocaleString());
 var path = [rootDir];
-let numAPICallsToPause = 50;
+// let numAPICallsToPause = 50;
+let numAPICallsToPause = 20;
 
 export let startExporting = function (quipToken) {
   if (quipToken) {
@@ -64,6 +65,7 @@ export let startExporting = function (quipToken) {
                 globalStore.addToLog(`Zip file ${rootDir} created`);
                 globalStore.zipFile = blob;
                 globalStore.rootDir = rootDir;
+                globalStore.zipFileFinished = true;
                 globalStore.finished = true;
                 globalStore.running = false;
               });
@@ -196,8 +198,8 @@ function clean(str) {
 function waitForUnpause() {
   return new Promise((resolve) => {
     let interval = setInterval(() => {
-      console.log("paused", globalStore.exportPaused);
-      if (!globalStore.exportPaused) {
+      console.log(`paused: ${globalStore.exportPaused}, paused by User: ${globalStore.exportPausedByUser}, running: ${globalStore.running}`);
+      if (!globalStore.exportPaused && !globalStore.exportPausedByUser) {
         clearInterval(interval);
         resolve();
       }
@@ -208,16 +210,35 @@ function waitForUnpause() {
 // iterator
 async function processObj(obj, report) {
   if (waiter.totalC > numAPICallsToPause && !globalStore.donated) {
-    if (!globalStore.zipFile) {
+    globalStore.numAPIcalls = waiter.totalC;
+    globalStore.exportPaused = true; // pause export and ask for donation
+    globalStore.running = false;
+    globalStore.zipFile = null;
+    globalStore.addToLog("Creating zip file");
+
+    setTimeout(() => {
       zipService.generateAsync({ type: "blob" }).then(function (blob) {
         globalStore.addToLog(`Zip file ${rootDir}_demo created`);
         globalStore.zipFile = blob;
         globalStore.rootDir = rootDir + "_demo";
-        globalStore.exportPaused = true;
-        globalStore.numAPIcalls = waiter.totalC;
-        globalStore.running = false;
+        globalStore.zipFileFinished = true;
       });
-    }
+    }, 10000);
+    await waitForUnpause();
+    globalStore.running = true;
+  }
+  if (globalStore.exportPausedByUser) {
+    globalStore.zipFile = null;
+    globalStore.addToLog("Creating zip file");
+
+    setTimeout(() => {
+      zipService.generateAsync({ type: "blob" }).then(function (blob) {
+        globalStore.addToLog(`Zip file ${rootDir}_interim created`);
+        globalStore.zipFile = blob;
+        globalStore.rootDir = rootDir + "_interim";
+        globalStore.zipFileFinished = true;
+      });
+    }, 10000);
     await waitForUnpause();
     globalStore.running = true;
   }

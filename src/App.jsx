@@ -1,5 +1,5 @@
 import React from "react";
-import { view } from "react-easy-state";
+import { view } from "@risingstack/react-easy-state";
 import globalStore from "./globalStore";
 import avatar from "./assets/pf_sq_low-res.jpg";
 import logo from "./assets/Logo_Quip-Exporter.png";
@@ -12,17 +12,31 @@ let exporter = require("./exporter/exporter");
 
 class App extends React.Component {
   startExporting() {
-    let at = document.getElementById("accesstoken").value;
-    exporter.startExporting(at);
+    globalStore.zipFileFinished = false;
+    if(!globalStore.running && !globalStore.exportPaused && !globalStore.exportPausedByUser){
+      globalStore.finished = false;
+      let at = document.getElementById("accesstoken").value;
+      exporter.startExporting(at);
+    } else if (globalStore.exportPausedByUser){
+      globalStore.exportPausedByUser = false;
+      globalStore.running = true;
+    }
   }
 
   donateAndContinue() {
-    window.open("https://www.paypal.me/mindactuate/1", "_blank");
+    window.open("https://paypal.me/mindactuate", "_blank");
+    globalStore.donated = true;
     globalStore.exportPaused = false;
   }
 
   downloadZip() {
     saveAs(globalStore.zipFile, globalStore.rootDir);
+  }
+
+  pauseExportingByUser(){
+    globalStore.zipFileFinished = false;
+    globalStore.exportPausedByUser = true;
+    globalStore.running = false;
   }
 
   render() {
@@ -131,7 +145,7 @@ class App extends React.Component {
                 <tr>
                   <td valign="top">
                     <a
-                      href="https://www.paypal.me/mindactuate/1"
+                      href="https://paypal.me/mindactuate"
                       target="blank"
                     >
                       <img
@@ -146,7 +160,7 @@ class App extends React.Component {
                       This app is a lot of work. Please consider donating just a
                       little. :) You can{" "}
                       <a
-                        href="https://www.paypal.me/mindactuate/1"
+                        href="https://paypal.me/mindactuate"
                         target="blank"
                       >
                         paypal me
@@ -213,27 +227,47 @@ class App extends React.Component {
               <br /> After the export is complete you can download a zip (which
               is generated and filled by your browser on the run.)
             </p>
-            <input
-              type="button"
-              value="Start exporting"
-              style={{ width: "100%", height: "50px" }}
-              onClick={() => this.startExporting()}
-            />
+            <div hidden={globalStore.running}>
+              <input
+                type="button"
+                value="Start exporting"
+                disabled={globalStore.exportPaused}
+                style={{ width: "100%", height: "50px" }}
+                onClick={() => this.startExporting()}
+              />
+            </div>
             <div hidden={!globalStore.running}>
+              <input
+                type="button"
+                value="Pause exporting and download zip"
+                style={{ width: "100%", height: "50px" }}
+                onClick={() => this.pauseExportingByUser()}
+              />
               <p>
                 <b style={{ color: "limegreen" }}>&#9679; Export running</b>
               </p>
             </div>
+            <div hidden={!globalStore.exportPausedByUser}>
+              <p>Your paused your export. You can download your current zip or continue with exporting.</p>
+              <input
+                type="button"
+                disabled={!globalStore.zipFileFinished}
+                value={`${globalStore.zipFileFinished ? "Download zip" : "Wait for zip..."}`}
+                id="callToAction"
+                onClick={() => this.downloadZip()}
+              />
+            </div>
             <div hidden={!globalStore.exportPaused}>
               <p>
                 You exported <b>{globalStore.numAPIcalls}</b> documents and
-                images now. A friendly reminder:
+                images now. A friendly reminder:{" "}
                 <b>Please donate just a little.</b> You can also download the
                 current zip and have a look at the files.
               </p>
               <input
                 type="button"
-                value="Download zip"
+                disabled={!globalStore.zipFileFinished}
+                value={`${globalStore.zipFileFinished ? "Download zip" : "Wait for zip..."}`}
                 id="callToAction"
                 onClick={() => this.downloadZip()}
               />
@@ -249,7 +283,8 @@ class App extends React.Component {
               <p>Your export is finished.</p>
               <input
                 type="button"
-                value="Download zip"
+                disabled={!globalStore.zipFileFinished}
+                value={`${globalStore.zipFileFinished ? "Download zip" : "Wait for zip..."}`}
                 style={{
                   width: "100%",
                   height: "50px",

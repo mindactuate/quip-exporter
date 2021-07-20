@@ -1,4 +1,4 @@
-import { store } from "react-easy-state";
+import { store } from "@risingstack/react-easy-state";
 
 let globalStore = store({
   log: [],
@@ -12,9 +12,11 @@ let globalStore = store({
   zipFile: null,
   rootDir: null,
   exportPaused: false,
+  exportPausedByUser: false,
   donated: false,
   running: false,
-    finished: false,
+  finished: false,
+  zipFileFinished: false,
   numAPIcalls: 0
 });
 
