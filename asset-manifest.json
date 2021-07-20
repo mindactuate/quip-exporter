@@ -1,25 +1,23 @@
 {
   "files": {
-    "main.css": "/quip-exporter/static/css/main.a0402ac4.chunk.css",
-    "main.js": "/quip-exporter/static/js/main.23aaada7.chunk.js",
-    "main.js.map": "/quip-exporter/static/js/main.23aaada7.chunk.js.map",
-    "runtime-main.js": "/quip-exporter/static/js/runtime-main.f5ef6d8f.js",
-    "runtime-main.js.map": "/quip-exporter/static/js/runtime-main.f5ef6d8f.js.map",
-    "static/js/2.38a0ae0a.chunk.js": "/quip-exporter/static/js/2.38a0ae0a.chunk.js",
-    "static/js/2.38a0ae0a.chunk.js.map": "/quip-exporter/static/js/2.38a0ae0a.chunk.js.map",
+    "main.css": "/quip-exporter/static/css/main.9cef6a60.chunk.css",
+    "main.js": "/quip-exporter/static/js/main.1d1f73ad.chunk.js",
+    "main.js.map": "/quip-exporter/static/js/main.1d1f73ad.chunk.js.map",
+    "runtime-main.js": "/quip-exporter/static/js/runtime-main.e243fb2b.js",
+    "runtime-main.js.map": "/quip-exporter/static/js/runtime-main.e243fb2b.js.map",
+    "static/js/2.145dd90e.chunk.js": "/quip-exporter/static/js/2.145dd90e.chunk.js",
+    "static/js/2.145dd90e.chunk.js.map": "/quip-exporter/static/js/2.145dd90e.chunk.js.map",
     "index.html": "/quip-exporter/index.html",
-    "precache-manifest.4545cde87707570028e2d12e1a693b16.js": "/quip-exporter/precache-manifest.4545cde87707570028e2d12e1a693b16.js",
-    "service-worker.js": "/quip-exporter/service-worker.js",
-    "static/css/main.a0402ac4.chunk.css.map": "/quip-exporter/static/css/main.a0402ac4.chunk.css.map",
-    "static/js/2.38a0ae0a.chunk.js.LICENSE.txt": "/quip-exporter/static/js/2.38a0ae0a.chunk.js.LICENSE.txt",
-    "static/media/Logo_Quip-Exporter.png": "/quip-exporter/static/media/Logo_Quip-Exporter.6b86c18a.png",
-    "static/media/icon_donate.png": "/quip-exporter/static/media/icon_donate.d16d81d4.png",
-    "static/media/pf_sq_low-res.jpg": "/quip-exporter/static/media/pf_sq_low-res.8e578ec0.jpg"
+    "static/css/main.9cef6a60.chunk.css.map": "/quip-exporter/static/css/main.9cef6a60.chunk.css.map",
+    "static/js/2.145dd90e.chunk.js.LICENSE.txt": "/quip-exporter/static/js/2.145dd90e.chunk.js.LICENSE.txt",
+    "static/media/Logo_Quip-Exporter.63c2e751.png": "/quip-exporter/static/media/Logo_Quip-Exporter.63c2e751.png",
+    "static/media/icon_donate.ef03c9d7.png": "/quip-exporter/static/media/icon_donate.ef03c9d7.png",
+    "static/media/pf_sq_low-res.67450953.jpg": "/quip-exporter/static/media/pf_sq_low-res.67450953.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.f5ef6d8f.js",
-    "static/js/2.38a0ae0a.chunk.js",
-    "static/css/main.a0402ac4.chunk.css",
-    "static/js/main.23aaada7.chunk.js"
+    "static/js/runtime-main.e243fb2b.js",
+    "static/js/2.145dd90e.chunk.js",
+    "static/css/main.9cef6a60.chunk.css",
+    "static/js/main.1d1f73ad.chunk.js"
   ]
 }
