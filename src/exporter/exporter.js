@@ -14,11 +14,23 @@ let mdService = new turndown();
 let zipService = new jszip();
 
 let waiter = new patiently.LimitWaiter({
-  startWaitingCallback: (res) => console.log(res),
+  startWaitingCallback: (res) => {
+    console.log(res);
+    let secToWait = 0;
+    Object.keys(res).forEach(key => { 
+      if (key.includes("secondsToWait")) { 
+        secToWait = res[key];
+      }
+    });
+    let currTime = new Date();
+    globalStore.addToLog(`Sorry, you have to wait til ${new Date(currTime.setSeconds(currTime.getSeconds() + secToWait)).toLocaleTimeString()} (${secToWait} seconds) due to api rate limits of quip.com. More info: ${JSON.stringify(res)}`);
+  },
   endWaitingCallback: (res) => console.log(res),
   waitingTickCallback: (res) => console.log(res),
-  minutelyLimit: 50,
-  hourlyLimit: 750,
+  minutelyLimit: 50, // official rate limit of any quip.com user
+  hourlyLimit: 750, // official rate limit of any quip.com user
+  // minutelyLimit: 180, // special rate limit of Daniel Gruner's quip.com user
+  // hourlyLimit: 1500, // special rate limit of Daniel Gruner's quip.com user
   msBetweenTwoCalls: 0,
   test: false,
 });
@@ -48,28 +60,47 @@ export let startExporting = function (quipToken) {
         folder: {
           id: "12345",
           title: "Shared",
-        },
+        }
       };
+      let groupFolderIds = user["group_folder_ids"];
+      let groupFolderChildren = [];
+      if (Array.isArray(groupFolderIds)) {
+        groupFolderIds.forEach((folderId) => {
+          groupFolderChildren.push({ folder_id: folderId });
+        })
+      }
+      let groupFolder = {
+        children: groupFolderChildren,
+        folder: {
+          id: "67890",
+          title: "Group"
+        }
+      }
+
       getFolder(user["private_folder_id"], (privateFolder) => {
         console.log("loop over private folder docs");
         waterfallOverFolder(privateFolder, processObj, function (tree) {
           console.log("In queue:", waiter.callbackQueue.length);
           console.log("loop over shared folders");
           waterfallOverFolder(sharedFolder, processObj, function (tree) {
-            globalStore.addToLog("Finished exporting");
-            globalStore.addToLog("Used " + waiter.totalC + " api calls");
-            globalStore.addToLog("Creating zip file");
+            console.log("In queue:", waiter.callbackQueue.length);
+            console.log("loop over group folders");
+            waterfallOverFolder(groupFolder, processObj, function (tree) {
+              globalStore.addToLog("Finished exporting");
+              globalStore.addToLog("Used " + waiter.totalC + " api calls");
+              globalStore.addToLog("Creating zip file");
 
-            setTimeout(() => {
-              zipService.generateAsync({ type: "blob" }).then(function (blob) {
-                globalStore.addToLog(`Zip file ${rootDir} created`);
-                globalStore.zipFile = blob;
-                globalStore.rootDir = rootDir;
-                globalStore.zipFileFinished = true;
-                globalStore.finished = true;
-                globalStore.running = false;
-              });
-            }, 10000);
+              setTimeout(() => {
+                zipService.generateAsync({ type: "blob" }).then(function (blob) {
+                  globalStore.addToLog(`Zip file ${rootDir} created`);
+                  globalStore.zipFile = blob;
+                  globalStore.rootDir = rootDir;
+                  globalStore.zipFileFinished = true;
+                  globalStore.finished = true;
+                  globalStore.running = false;
+                });
+              }, 10000);
+            });
           });
         });
       });
@@ -142,8 +173,9 @@ let getFolder = async (id, callback) => {
       .catch((err) => {
         globalStore.running = false;
         globalStore.addToLog(
-          `Error while getting folder: ${JSON.stringify(err.message)}`
+          `Error while getting folder: ${JSON.stringify(err.message)}, try to skip`
         );
+        callback(null)
         if (
           err.response &&
           err.response.status &&
@@ -158,30 +190,42 @@ let getFolder = async (id, callback) => {
 // https://mostafa-samir.github.io/async-iterative-patterns-pt1/
 function waterfallOverFolder(folder, iterator, callback) {
   var tree = {};
-  const id = folder.folder.id;
-  tree[id] = [];
-  var nextItemIndex = 0;
-  const length = folder.children.length;
-  const name = folder.folder.title;
-  const cleanName = clean(name);
 
-  path.push(cleanName);
+  if (folder !== null) {
+    const id = folder.folder.id;
+    tree[id] = [];
+    var nextItemIndex = 0;
+    const length = folder.children.length;
+    const name = folder.folder.title;
+    const cleanName = clean(name);
 
-  // createFolder(path.join('/')); // folder will be generated directly in zip
+    path.push(cleanName);
 
-  function report(res) {
-    if (res) {
-      tree[id].push(res);
+    // createFolder(path.join('/')); // folder will be generated directly in zip
+
+    function report(res) {
+      if (res) {
+        tree[id].push(res);
+      }
+      nextItemIndex++;
+      if (nextItemIndex === length) {
+        path.pop();
+        callback(tree);
+      } else {
+        iterator(folder.children[nextItemIndex], report);
+      }
     }
-    nextItemIndex++;
-    if (nextItemIndex === length) {
+
+    // had the case of an empty folder with 0 children
+    if (length > 0) {
+      iterator(folder.children[0], report);
+    } else {
       path.pop();
       callback(tree);
-    } else {
-      iterator(folder.children[nextItemIndex], report);
     }
+  } else {
+    callback(tree);
   }
-  iterator(folder.children[0], report);
 }
 
 // https://stackoverflow.com/questions/1909815/regex-to-compare-strings-with-umlaut-and-non-umlaut-variations
@@ -209,6 +253,8 @@ function waitForUnpause() {
 
 // iterator
 async function processObj(obj, report) {
+
+  // generate demo zip
   if (waiter.totalC > numAPICallsToPause && !globalStore.donated) {
     globalStore.numAPIcalls = waiter.totalC;
     globalStore.exportPaused = true; // pause export and ask for donation
@@ -227,6 +273,8 @@ async function processObj(obj, report) {
     await waitForUnpause();
     globalStore.running = true;
   }
+
+  // generate interim zip
   if (globalStore.exportPausedByUser) {
     globalStore.zipFile = null;
     globalStore.addToLog("Creating zip file");
@@ -242,24 +290,29 @@ async function processObj(obj, report) {
     await waitForUnpause();
     globalStore.running = true;
   }
+
   if (obj.hasOwnProperty("thread_id")) {
     getThread(obj["thread_id"], (thread) => {
-      let threadName = clean(thread.thread.title);
+      if (thread !== null) {
+        let threadName = clean(thread.thread.title);
 
-      path.push(threadName);
-      let threadFilePath = path.join("/");
-      path.pop();
+        path.push(threadName);
+        let threadFilePath = path.join("/");
+        path.pop();
 
-      extractAndReplaceImgsInHTML(
-        thread.html,
-        thread.thread.id,
-        threadName,
-        (html) => {
-          createHTMLAndMdFile(threadFilePath, thread.thread.title, html);
-          fetchDocxAndWriteToFile(obj["thread_id"], threadFilePath);
-          report(obj["thread_id"]);
-        }
-      );
+        extractAndReplaceImgsInHTML(
+          thread.html,
+          thread.thread.id,
+          threadName,
+          (html) => {
+            createHTMLAndMdFile(threadFilePath, thread.thread.title, html);
+            fetchDocxAndWriteToFile(obj["thread_id"], threadFilePath);
+            report(obj["thread_id"]);
+          }
+        );
+      } else {
+        report(obj["thread_id"])
+      }
     });
   } else if (obj.hasOwnProperty("folder_id")) {
     getFolder(obj["folder_id"], (folder) => {
@@ -300,8 +353,9 @@ let getThread = async (id, callback) => {
       .catch((err) => {
         console.log(err);
         globalStore.addToLog(
-          `Error while getting thread: ${JSON.stringify(err.message)}`
+          `Error while getting thread: ${JSON.stringify(err.message)}, try to skip`
         );
+        callback(null);
         if (
           err.response &&
           err.response.status &&
